@@ -1,0 +1,223 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cnelib.database</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cnelib.html"><font color="#ffffff">cnelib</font></a>.database</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/lib/python2.7/dist-packages/cnelib/database.py">/usr/local/lib/python2.7/dist-packages/cnelib/database.py</a></font></td></tr></table>
+    <p><tt>cnelib&nbsp;-&nbsp;Base&nbsp;de&nbsp;datos<br>
+Copyright&nbsp;2016,&nbsp;Ismael&nbsp;R.&nbsp;Lugo&nbsp;G.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="MySQLdb.html">MySQLdb</a><br>
+</td><td width="25%" valign=top><a href="logging.html">logging</a><br>
+</td><td width="25%" valign=top><a href="sqlite3.html">sqlite3</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="cnelib.database.html#sql_db">sql_db</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="cnelib.database.html#mysql_db">mysql_db</a>
+</font></dt><dt><font face="helvetica, arial"><a href="cnelib.database.html#sqlite_db">sqlite_db</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="mysql_db">class <strong>mysql_db</strong></a>(<a href="cnelib.database.html#sql_db">sql_db</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="mysql_db-__init__"><strong>__init__</strong></a>(self, host<font color="#909090">=''</font>, user<font color="#909090">=''</font>, passwd<font color="#909090">=''</font>, name<font color="#909090">=''</font>, conf<font color="#909090">=None</font>)</dt><dd><tt>Clase&nbsp;para&nbsp;MySQL<br>
+Argumentos:<br>
+*&nbsp;host&nbsp;--&nbsp;Direccion&nbsp;del&nbsp;host<br>
+*&nbsp;user&nbsp;--&nbsp;Nombre&nbsp;de&nbsp;usuario<br>
+*&nbsp;passwd&nbsp;--&nbsp;Contaseña<br>
+*&nbsp;name&nbsp;--&nbsp;Nombre&nbsp;de&nbsp;la&nbsp;base&nbsp;de&nbsp;datos<br>
+*&nbsp;conf&nbsp;--&nbsp;Clase&nbsp;de&nbsp;configuracion<br>
+&nbsp;<br>
+Al&nbsp;indicar&nbsp;el&nbsp;argumento&nbsp;"conf",&nbsp;tiene&nbsp;prioridad&nbsp;sobre&nbsp;los&nbsp;otros<br>
+argumentos&nbsp;que&nbsp;pudieran&nbsp;ser&nbsp;indicados.<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;import&nbsp;cnelib<br>
+&gt;&gt;&gt;&nbsp;db&nbsp;=&nbsp;cnelib.database.<a href="#mysql_db">mysql_db</a>('127.0.0.7',&nbsp;'root',&nbsp;'pass')<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<dl><dt><a name="mysql_db-get"><strong>get</strong></a>(self, **kwargs)</dt><dd><tt>Consulta&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos&nbsp;y&nbsp;retorna.<br>
+Argumentos&nbsp;claves:<br>
+&nbsp;<br>
+-&nbsp;Grupo:&nbsp;1<br>
+*&nbsp;nacionalidad&nbsp;--&nbsp;Nacionalidad&nbsp;(V|E)<br>
+*&nbsp;cedula&nbsp;--&nbsp;Numero&nbsp;de&nbsp;cedula<br>
+-&nbsp;---&nbsp;accion&nbsp;---&gt;&nbsp;Busca&nbsp;por&nbsp;numero&nbsp;de&nbsp;cedula<br>
+&nbsp;<br>
+-&nbsp;Grupo:&nbsp;2<br>
+*&nbsp;text&nbsp;--&nbsp;Texto&nbsp;para&nbsp;busqueda<br>
+-&nbsp;---&nbsp;accion&nbsp;---&gt;&nbsp;Busca&nbsp;por&nbsp;texto<br>
+&nbsp;<br>
+-&nbsp;Grupo:&nbsp;3<br>
+*&nbsp;items&nbsp;--&nbsp;Items&nbsp;para&nbsp;su&nbsp;busqueda<br>
+*&nbsp;compl&nbsp;--&nbsp;(OPCIONAL)&nbsp;Valores&nbsp;complementarios&nbsp;para&nbsp;busqueda<br>
+-&nbsp;---&nbsp;accion&nbsp;---&gt;&nbsp;Busca&nbsp;por&nbsp;expresiones&nbsp;regulares<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#mysql_db-get">get</a>(nacionalidad='V',&nbsp;cedula=12345678)<br>
+((12345678,&nbsp;'V',&nbsp;'Peppa&nbsp;Pig',&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None),)<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#mysql_db-get">get</a>(text='Kame')<br>
+('V',&nbsp;12345681,&nbsp;'Maestro&nbsp;Roshi',&nbsp;'Isla',&nbsp;'Isla',&nbsp;'Isla',&nbsp;'Islote',<br>
+'Cerca&nbsp;de&nbsp;la&nbsp;capital&nbsp;del&nbsp;norte,&nbsp;en&nbsp;la&nbsp;Kame&nbsp;House')<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#mysql_db-get">get</a>(items={'nombre':&nbsp;'%Pig%'}.items())<br>
+((12345678,&nbsp;'V',&nbsp;'Peppa&nbsp;Pig',&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None),<br>
+(12345679,&nbsp;'V',&nbsp;'George&nbsp;Pig',&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None),<br>
+(12345680,&nbsp;'V',&nbsp;'Papá&nbsp;Pig',&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None))<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#mysql_db-get">get</a>(items={'nombre':&nbsp;'%Gokü%'}.items())<br>
+()<br>
+&gt;&gt;&gt;<br>
+&nbsp;<br>
+NOTA:&nbsp;Es&nbsp;imposible&nbsp;entre&nbsp;mezclar&nbsp;los&nbsp;grupos.</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="cnelib.database.html#sql_db">sql_db</a>:<br>
+<dl><dt><a name="mysql_db-execute"><strong>execute</strong></a>(self, query, commit<font color="#909090">=False</font>)</dt><dd><tt>Ejecuta&nbsp;algun&nbsp;codigo&nbsp;SQL<br>
+Argumentos:<br>
+*&nbsp;query&nbsp;--&nbsp;Codigo&nbsp;SQL<br>
+*&nbsp;commit&nbsp;--&nbsp;Marca&nbsp;si&nbsp;se&nbsp;guardaran&nbsp;o&nbsp;no&nbsp;los&nbsp;cambios,&nbsp;si&nbsp;los&nbsp;hubiere.</tt></dd></dl>
+
+<dl><dt><a name="mysql_db-set"><strong>set</strong></a>(self, nacionalidad, cedula, nombre, **kwargs)</dt><dd><tt>Setea&nbsp;alguna&nbsp;cedula<br>
+Argumentos:<br>
+*&nbsp;nacionalidad&nbsp;--&nbsp;Nacionalidad&nbsp;(V|E)<br>
+*&nbsp;cedula&nbsp;--&nbsp;Numero&nbsp;de&nbsp;cedula<br>
+*&nbsp;nombre&nbsp;--&nbsp;Nombre&nbsp;del&nbsp;ciudadano<br>
+*&nbsp;kwargs&nbsp;--&nbsp;Argumentos&nbsp;clave&nbsp;disponibles:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;estado&nbsp;--&nbsp;Estado&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;municipio&nbsp;-&nbsp;Municipio&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parroquia&nbsp;--&nbsp;Parroquia&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;centro_votacion&nbsp;--&nbsp;Centro&nbsp;de&nbsp;votacion<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;direccion&nbsp;--&nbsp;Direccion&nbsp;de&nbsp;residencia<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#mysql_db-set">set</a>('V',&nbsp;12345678,&nbsp;'Peppa&nbsp;Pig')<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#mysql_db-set">set</a>('V',&nbsp;12345681,&nbsp;'Maestro&nbsp;Roshi',<br>
+...&nbsp;estado='Isla',<br>
+...&nbsp;municipio='Isla',<br>
+...&nbsp;parroquia='Isla',<br>
+...&nbsp;centro_votacion='Islote',<br>
+...&nbsp;direccion='Cerca&nbsp;de&nbsp;la&nbsp;capital&nbsp;del&nbsp;norte,&nbsp;en&nbsp;la&nbsp;Kame&nbsp;House')<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<dl><dt><a name="mysql_db-ultima_cedula"><strong>ultima_cedula</strong></a>(self)</dt><dd><tt>Retorna&nbsp;el&nbsp;ultimo&nbsp;numero&nbsp;de&nbsp;cedula&nbsp;registrado</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="sql_db">class <strong>sql_db</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Clase&nbsp;padre&nbsp;para&nbsp;bases&nbsp;de&nbsp;datos&nbsp;con&nbsp;sintaxis&nbsp;SQL.<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="sql_db-execute"><strong>execute</strong></a>(self, query, commit<font color="#909090">=False</font>)</dt><dd><tt>Ejecuta&nbsp;algun&nbsp;codigo&nbsp;SQL<br>
+Argumentos:<br>
+*&nbsp;query&nbsp;--&nbsp;Codigo&nbsp;SQL<br>
+*&nbsp;commit&nbsp;--&nbsp;Marca&nbsp;si&nbsp;se&nbsp;guardaran&nbsp;o&nbsp;no&nbsp;los&nbsp;cambios,&nbsp;si&nbsp;los&nbsp;hubiere.</tt></dd></dl>
+
+<dl><dt><a name="sql_db-set"><strong>set</strong></a>(self, nacionalidad, cedula, nombre, **kwargs)</dt><dd><tt>Setea&nbsp;alguna&nbsp;cedula<br>
+Argumentos:<br>
+*&nbsp;nacionalidad&nbsp;--&nbsp;Nacionalidad&nbsp;(V|E)<br>
+*&nbsp;cedula&nbsp;--&nbsp;Numero&nbsp;de&nbsp;cedula<br>
+*&nbsp;nombre&nbsp;--&nbsp;Nombre&nbsp;del&nbsp;ciudadano<br>
+*&nbsp;kwargs&nbsp;--&nbsp;Argumentos&nbsp;clave&nbsp;disponibles:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;estado&nbsp;--&nbsp;Estado&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;municipio&nbsp;-&nbsp;Municipio&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parroquia&nbsp;--&nbsp;Parroquia&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;centro_votacion&nbsp;--&nbsp;Centro&nbsp;de&nbsp;votacion<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;direccion&nbsp;--&nbsp;Direccion&nbsp;de&nbsp;residencia<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#sql_db-set">set</a>('V',&nbsp;12345678,&nbsp;'Peppa&nbsp;Pig')<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#sql_db-set">set</a>('V',&nbsp;12345681,&nbsp;'Maestro&nbsp;Roshi',<br>
+...&nbsp;estado='Isla',<br>
+...&nbsp;municipio='Isla',<br>
+...&nbsp;parroquia='Isla',<br>
+...&nbsp;centro_votacion='Islote',<br>
+...&nbsp;direccion='Cerca&nbsp;de&nbsp;la&nbsp;capital&nbsp;del&nbsp;norte,&nbsp;en&nbsp;la&nbsp;Kame&nbsp;House')<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<dl><dt><a name="sql_db-ultima_cedula"><strong>ultima_cedula</strong></a>(self)</dt><dd><tt>Retorna&nbsp;el&nbsp;ultimo&nbsp;numero&nbsp;de&nbsp;cedula&nbsp;registrado</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="sqlite_db">class <strong>sqlite_db</strong></a>(<a href="cnelib.database.html#sql_db">sql_db</a>)</font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="sqlite_db-__init__"><strong>__init__</strong></a>(self, abspath)</dt><dd><tt>Clase&nbsp;para&nbsp;SQLite3.<br>
+Argumentos:<br>
+*&nbsp;abspath&nbsp;--&nbsp;Direccion&nbsp;absoluta&nbsp;del&nbsp;archivo<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;import&nbsp;cnelib<br>
+&gt;&gt;&gt;&nbsp;db&nbsp;=&nbsp;cnelib.database.<a href="#sqlite_db">sqlite_db</a>('/home/{user}/sqlite.db')<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<dl><dt><a name="sqlite_db-get"><strong>get</strong></a>(self, **kwargs)</dt><dd><tt>Consulta&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos&nbsp;y&nbsp;retorna.<br>
+Argumentos&nbsp;claves:<br>
+&nbsp;<br>
+-&nbsp;Grupo:&nbsp;1<br>
+*&nbsp;nacionalidad&nbsp;--&nbsp;Nacionalidad&nbsp;(V|E)<br>
+*&nbsp;cedula&nbsp;--&nbsp;Numero&nbsp;de&nbsp;cedula<br>
+-&nbsp;---&nbsp;accion&nbsp;---&gt;&nbsp;Busca&nbsp;por&nbsp;numero&nbsp;de&nbsp;cedula<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#sqlite_db-get">get</a>(nacionalidad='V',&nbsp;cedula=12345678)<br>
+((12345678,&nbsp;'V',&nbsp;'Peppa&nbsp;Pig',&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None),)<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="cnelib.database.html#sql_db">sql_db</a>:<br>
+<dl><dt><a name="sqlite_db-execute"><strong>execute</strong></a>(self, query, commit<font color="#909090">=False</font>)</dt><dd><tt>Ejecuta&nbsp;algun&nbsp;codigo&nbsp;SQL<br>
+Argumentos:<br>
+*&nbsp;query&nbsp;--&nbsp;Codigo&nbsp;SQL<br>
+*&nbsp;commit&nbsp;--&nbsp;Marca&nbsp;si&nbsp;se&nbsp;guardaran&nbsp;o&nbsp;no&nbsp;los&nbsp;cambios,&nbsp;si&nbsp;los&nbsp;hubiere.</tt></dd></dl>
+
+<dl><dt><a name="sqlite_db-set"><strong>set</strong></a>(self, nacionalidad, cedula, nombre, **kwargs)</dt><dd><tt>Setea&nbsp;alguna&nbsp;cedula<br>
+Argumentos:<br>
+*&nbsp;nacionalidad&nbsp;--&nbsp;Nacionalidad&nbsp;(V|E)<br>
+*&nbsp;cedula&nbsp;--&nbsp;Numero&nbsp;de&nbsp;cedula<br>
+*&nbsp;nombre&nbsp;--&nbsp;Nombre&nbsp;del&nbsp;ciudadano<br>
+*&nbsp;kwargs&nbsp;--&nbsp;Argumentos&nbsp;clave&nbsp;disponibles:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;estado&nbsp;--&nbsp;Estado&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;municipio&nbsp;-&nbsp;Municipio&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;parroquia&nbsp;--&nbsp;Parroquia&nbsp;de&nbsp;residencia<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;centro_votacion&nbsp;--&nbsp;Centro&nbsp;de&nbsp;votacion<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;direccion&nbsp;--&nbsp;Direccion&nbsp;de&nbsp;residencia<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#sqlite_db-set">set</a>('V',&nbsp;12345678,&nbsp;'Peppa&nbsp;Pig')<br>
+&gt;&gt;&gt;&nbsp;db.<a href="#sqlite_db-set">set</a>('V',&nbsp;12345681,&nbsp;'Maestro&nbsp;Roshi',<br>
+...&nbsp;estado='Isla',<br>
+...&nbsp;municipio='Isla',<br>
+...&nbsp;parroquia='Isla',<br>
+...&nbsp;centro_votacion='Islote',<br>
+...&nbsp;direccion='Cerca&nbsp;de&nbsp;la&nbsp;capital&nbsp;del&nbsp;norte,&nbsp;en&nbsp;la&nbsp;Kame&nbsp;House')<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<dl><dt><a name="sqlite_db-ultima_cedula"><strong>ultima_cedula</strong></a>(self)</dt><dd><tt>Retorna&nbsp;el&nbsp;ultimo&nbsp;numero&nbsp;de&nbsp;cedula&nbsp;registrado</tt></dd></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

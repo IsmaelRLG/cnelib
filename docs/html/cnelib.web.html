@@ -1,0 +1,80 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cnelib.web</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cnelib.html"><font color="#ffffff">cnelib</font></a>.web</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/lib/python2.7/dist-packages/cnelib/web.py">/usr/local/lib/python2.7/dist-packages/cnelib/web.py</a></font></td></tr></table>
+    <p><tt>cnelib&nbsp;-&nbsp;Visualizador&nbsp;<a href="#web">web</a><br>
+Copyright&nbsp;2016,&nbsp;Ismael&nbsp;R.&nbsp;Lugo&nbsp;G.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="cnelib.web.html#web">web</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="web">class <strong>web</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="web-__init__"><strong>__init__</strong></a>(self, addr<font color="#909090">=''</font>, port<font color="#909090">=0</font>, passwd<font color="#909090">=''</font>)</dt><dd><tt>Clase&nbsp;para&nbsp;aperturar&nbsp;paginas&nbsp;<a href="#web">web</a>.<br>
+Esta&nbsp;clase&nbsp;da&nbsp;la&nbsp;posibilidad&nbsp;de&nbsp;salir&nbsp;a&nbsp;la&nbsp;<a href="#web">web</a>&nbsp;con&nbsp;Tor&nbsp;(Proxy).&nbsp;Para<br>
+activar&nbsp;este&nbsp;modo&nbsp;hay&nbsp;que&nbsp;usar&nbsp;los&nbsp;siguientes&nbsp;argumentos:<br>
+*&nbsp;addr&nbsp;--&nbsp;Direccion&nbsp;de&nbsp;control&nbsp;(ControlAddr)<br>
+*&nbsp;port&nbsp;--&nbsp;Numero&nbsp;de&nbsp;puerto&nbsp;(ControlPort)<br>
+*&nbsp;passwd&nbsp;--&nbsp;Contraseña&nbsp;de&nbsp;control<br>
+&nbsp;<br>
+En&nbsp;caso&nbsp;de&nbsp;no&nbsp;usar&nbsp;algunos&nbsp;de&nbsp;estos&nbsp;argumentos,&nbsp;o&nbsp;no&nbsp;tener&nbsp;instalada&nbsp;la<br>
+libreria&nbsp;'TorCtl',&nbsp;se&nbsp;desactivara&nbsp;la&nbsp;navegacion&nbsp;con&nbsp;proxy.<br>
+&nbsp;<br>
+&gt;&gt;&gt;&nbsp;import&nbsp;cnelib<br>
+&gt;&gt;&gt;&nbsp;<a href="#web">web</a>&nbsp;=&nbsp;cnelib.<a href="#web">web</a>.<a href="#web">web</a>()<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;Soy&nbsp;visible,&nbsp;todos&nbsp;me&nbsp;ven.<br>
+&gt;&gt;&gt;&nbsp;html1&nbsp;=&nbsp;<a href="#web">web</a>.<a href="#web-open">open</a>('<a href="http://www.google.com">http://www.google.com</a>')<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;Soy&nbsp;invisible,&nbsp;nadie&nbsp;me&nbsp;ve.<br>
+&gt;&gt;&gt;&nbsp;<a href="#web">web</a>.<a href="#web-proxy">proxy</a>('localhost',&nbsp;9051,&nbsp;'AbreteSesamo')<br>
+&gt;&gt;&gt;&nbsp;html2&nbsp;=&nbsp;<a href="#web">web</a>.<a href="#web-open">open</a>('<a href="http://www.google.com">http://www.google.com</a>')<br>
+&nbsp;<br>
+Intencion&nbsp;del&nbsp;Proxy<br>
+&nbsp;&nbsp;&nbsp;&nbsp;La&nbsp;intención&nbsp;del&nbsp;proxy&nbsp;es&nbsp;saltar&nbsp;ciertas&nbsp;restricciones&nbsp;de&nbsp;algun<br>
+&nbsp;&nbsp;&nbsp;&nbsp;limite&nbsp;de&nbsp;solicitudes&nbsp;que&nbsp;pudiera&nbsp;existir.</tt></dd></dl>
+
+<dl><dt><a name="web-open"><strong>open</strong></a>(self, url)</dt><dd><tt>Apertura&nbsp;una&nbsp;pagina&nbsp;<a href="#web">web</a>&nbsp;con&nbsp;Proxy&nbsp;o&nbsp;no,&nbsp;y&nbsp;retorna&nbsp;lo&nbsp;leido.<br>
+*&nbsp;url&nbsp;--&nbsp;URL&nbsp;de&nbsp;la&nbsp;pagina&nbsp;<a href="#web">web</a></tt></dd></dl>
+
+<dl><dt><a name="web-proxy"><strong>proxy</strong></a>(self, addr, port, passwd)</dt><dd><tt>Setea&nbsp;la&nbsp;configuracion&nbsp;proxy,&nbsp;en&nbsp;caso&nbsp;de&nbsp;no&nbsp;existir,&nbsp;y&nbsp;en&nbsp;caso&nbsp;de&nbsp;que<br>
+exista&nbsp;se&nbsp;actualiza.<br>
+*&nbsp;addr&nbsp;--&nbsp;Direccion&nbsp;de&nbsp;control&nbsp;(ControlAddr)<br>
+*&nbsp;port&nbsp;--&nbsp;Numero&nbsp;de&nbsp;puerto&nbsp;(ControlPort)<br>
+*&nbsp;passwd&nbsp;--&nbsp;Contraseña&nbsp;de&nbsp;control</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>TorCtrl</strong> = None</td></tr></table>
+</body></html>

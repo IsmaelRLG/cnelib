@@ -1,0 +1,245 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+cne - Busqueda desde linea de comandos
+Copyright 2016, Ismael R. Lugo G.
+"""
+
+__version__ = '1.0.3'
+
+import os
+import sys
+import argparse
+import logging
+import cnelib
+
+from signal import SIGTERM
+
+# Opcionales
+args_ = argparse.ArgumentParser(description=cnelib.__doc__)
+args_.add_argument('-v', '--version',
+    action="store_true",
+    help="Imprime la version en pantalla")
+args_.add_argument('-d', '--debug',
+    help='Muestra la información de depuracion',
+    dest='verbose', action='store_true')
+args_.add_argument('-c', '--cedula',
+    help='Indica un numero de cedula',
+    dest='ncedula', type=str, metavar=('<V|E>', '<numero de cedula>'), nargs=2)
+
+# Fork
+fkopt = args_.add_argument_group("Opciones de forkeo")
+fkopt.add_argument('-F', '--fork',
+    help='Inicia o detiene el proceso de forkeo',
+    dest='fork', type=str, metavar='(start|stop)')
+fkopt.add_argument('-o', '--out',
+    help='Redirige la salida estandar a un archivo',
+    dest='out', type=str, metavar='filename')
+fkopt.add_argument('-nd', '--no-daemon',
+    help='Indica que el fork no se ejecutara como demonio',
+    dest='daemon', action='store_true')
+fkopt.add_argument('-fs', '--fork-set',
+    help='Setea valores para proceso de forkeo',
+    dest='fork_set', type=str, metavar=('<rango>', '<solicitudes por segundo>'),
+    nargs=2)
+
+# Configuracion
+cfopt = args_.add_argument_group("Opciones de configuracion")
+cfopt.add_argument('-cc', '--conf',
+    help='Indica el archivo de configuracion (requerido)',
+    dest='conf', type=str, required=False, metavar='config')
+cfopt.add_argument('-m', '--makeconf',
+    help='Crea un archivo de configuración',
+    dest='makeconf', action='store_true')
+
+# Busqueda
+schopt = args_.add_argument_group("Opciones de busqueda")
+schopt.add_argument('-s', '--search',
+    help='Busca una cedula y muestra los resultados.',
+    dest='search', action='store_true')
+schopt.add_argument('-f', '--find',
+    help='Realiza una busqueda especifica',
+    dest='patt', type=str, metavar=('<nombre|direccion>', "<regex>"),
+    nargs=2)
+schopt.add_argument('-a', '--and',
+    help='Establece un segundo valor de busqueda para -f/--find',
+    dest='compl', type=str, metavar=('<nombre|direccion>', "<regex>"),
+    nargs=2)
+schopt.add_argument('-t', '--text',
+    help='Busca un segmento de texto',
+    dest='txt', type=str, metavar=("<texto>"))
+
+args = args_.parse_args()
+
+
+def main():
+    if args.version:
+        print('cnelib v' + cnelib.__version__)
+        print('cnecli v' + __version__)
+        print('Copyright 2016, Ismael R. Lugo G.')
+        return
+
+    if args.verbose:
+        logging.basicConfig(level=10, format='%(levelname)s: %(message)s')
+    else:
+        logging.basicConfig(level=20, format='%(levelname)s: %(message)s')
+
+    if not args.conf:
+        logging.error('Archivo de configuracion requerido')
+        logging.error('Forma de uso: -c config')
+        return
+
+    confile = args.conf
+
+    if args.makeconf:
+        cnelib.config.config(confile).make()
+        return
+
+    try:
+        conf = cnelib.config.config(confile, SystemExit=True)
+    except SystemExit:
+        return
+
+    if conf.conf.has_option('CNE', 'ABSPATH'):
+        database = cnelib.database.sqlite_db(conf('ABSPATH'))
+    else:
+        database = cnelib.database.mysql_db(conf=conf)
+
+    if conf.conf.getboolean('CNE', 'tor'):
+        web = cnelib.web.web(conf('addr'), int(conf('port')), conf('pass'))
+    else:
+        web = cnelib.web.web()
+
+    cedula = cnelib.blend.cedula(web, database)
+
+    if args.ncedula:
+        nacionalidad = args.ncedula[0][0].upper()
+        num_cedula = int(args.ncedula[1].replace('.', '').replace(',', ''))
+    else:
+        nacionalidad = ''
+        num_cedula = 0
+
+    if args.fork or args.fork_set:
+        if args.fork == 'stop':
+            if conf.conf.getboolean('CNE', 'fork'):
+                pid = conf.conf.getint('CNE', 'pid')
+                os.kill(pid, SIGTERM)
+                conf.conf.set('CNE', 'fork', 'no')
+                conf.save()
+                logging.info('forkeo %s detenido' % pid)
+                return
+            else:
+                logging.error('no hay un forkeo en proceso')
+
+        elif args.fork == 'start' or args.fork_set:
+
+            if args.fork_set:
+                if num_cedula and nacionalidad:
+                    sps = float(args.fork_set[1])
+                    nac = nacionalidad
+                    init = num_cedula
+                    now = num_cedula
+                    end = num_cedula + int(args.fork_set[0])
+                    fork = cnelib.fork.fork(cedula, sps, nac, init, end, now)
+            elif args.fork:
+                fork = cnelib.fork.fork(cedula, conf=conf)
+            if not args.daemon and not args.fork_set:
+                # Do first fork.
+                try:
+                    pid = os.fork()
+                    if pid > 0:
+                        sys.exit(0)   # Exit first parent.
+                except OSError as e:
+                    sys.stderr.write("fork #1 failed: (%d) %s\n" % (e.errno, e.strerror))
+                    sys.exit(1)
+
+                # Decouple from parent environment.
+                os.chdir("/")
+                os.umask(0)
+                os.setsid()
+
+                # Do second fork.
+                try:
+                    pid = os.fork()
+                    if pid > 0:
+                        sys.exit(0)   # Exit second parent.
+                except OSError as e:
+                    sys.stderr.write("fork #2 failed: (%d) %s\n" % (e.errno, e.strerror))
+                    sys.exit(1)
+
+                if args.out:
+                    out = args.out
+                else:
+                    out = '/dev/null'
+
+                # Open file descriptors and print start message
+                si = file(out, 'r')
+                so = file(out, 'a+')
+                se = file(out, 'a+', 0)
+                pid = str(os.getpid())
+                conf.conf.set('CNE', 'pid', str(pid))
+                conf.conf.set('CNE', 'fork', 'yes')
+                conf.save()
+                # Redirect standard file descriptors.
+                os.dup2(si.fileno(), sys.stdin.fileno())
+                os.dup2(so.fileno(), sys.stdout.fileno())
+                os.dup2(se.fileno(), sys.stderr.fileno())
+            fork.fork()
+        else:
+            logging.error('Forma de uso: -F (start|stop)')
+
+    if args.search:
+        n = []
+        for val in cedula.search(nacionalidad, num_cedula):
+            if isinstance(val, tuple):
+                for m in val:
+                    if m is None:
+                        continue
+                    elif isinstance(m, int):
+                        m = str(m)
+                    n.append(m)
+
+            elif val is not None:
+                if isinstance(val, int):
+                    val = str(val)
+                n.append(val)
+
+        logging.info(', '.join(n))
+        return
+
+    if args.patt:
+        if database.type != 'mysql':
+            logging.error('Funcionalidad valida solo para MySQL')
+            return
+
+        kwargs = {'items': [args.patt]}
+        if args.compl:
+            kwargs['compl'] = [args.compl]
+
+        for n in database.get(**kwargs):
+            p = []
+            for m in n:
+                if m is not None:
+                    p.append(m)
+            logging.info(', '.join(p))
+        else:
+            logging.error('No hay resultados para la busqueda')
+        return
+
+    if args.txt:
+        if database.type != 'mysql':
+            logging.error('Funcionalidad valida solo para MySQL')
+            return
+
+        for n in database.get(text=args.txt):
+            p = []
+            for m in n:
+                if m is not None:
+                    p.append(m)
+            logging.info(', '.join(p))
+        else:
+            logging.error('No hay resultados para la busqueda')
+        return
+
+if __name__ == '__main__':
+    main()

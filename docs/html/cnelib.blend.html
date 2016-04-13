@@ -1,0 +1,65 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module cnelib.blend</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="cnelib.html"><font color="#ffffff">cnelib</font></a>.blend</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/usr/local/lib/python2.7/dist-packages/cnelib/blend.py">/usr/local/lib/python2.7/dist-packages/cnelib/blend.py</a></font></td></tr></table>
+    <p><tt>cnelib&nbsp;-&nbsp;Base&nbsp;de&nbsp;datos&nbsp;y&nbsp;Consultas<br>
+Copyright&nbsp;2016,&nbsp;Ismael&nbsp;R.&nbsp;Lugo&nbsp;G.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="cnelib.html">cnelib</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="cnelib.blend.html#cedula">cedula</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="cedula">class <strong>cedula</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="cedula-__init__"><strong>__init__</strong></a>(self, web, database)</dt><dd><tt>Mezcla&nbsp;entre&nbsp;consultas&nbsp;en&nbsp;base&nbsp;de&nbsp;datos&nbsp;locales&nbsp;y&nbsp;consultas&nbsp;web,&nbsp;primero<br>
+al&nbsp;solicitar&nbsp;informacion&nbsp;se&nbsp;verifica&nbsp;que&nbsp;este&nbsp;contenida&nbsp;en&nbsp;la&nbsp;base&nbsp;de<br>
+datos&nbsp;local,&nbsp;de&nbsp;no&nbsp;ser&nbsp;asi&nbsp;se&nbsp;procede&nbsp;a&nbsp;una&nbsp;consulta&nbsp;web,&nbsp;y&nbsp;al&nbsp;encontrar<br>
+informacion&nbsp;util,&nbsp;se&nbsp;guarda&nbsp;en&nbsp;la&nbsp;base&nbsp;de&nbsp;datos&nbsp;y&nbsp;retorna.<br>
+*&nbsp;database&nbsp;--&nbsp;Clase&nbsp;de&nbsp;base&nbsp;de&nbsp;datos<br>
+*&nbsp;web&nbsp;--&nbsp;Clase&nbsp;de&nbsp;consultas&nbsp;web<br>
+&nbsp;<br>
+Ejemplos&nbsp;de&nbsp;uso:<br>
+&gt;&gt;&gt;&nbsp;import&nbsp;cnelib<br>
+&gt;&gt;&gt;&nbsp;web&nbsp;=&nbsp;cnelib.web.web()<br>
+&gt;&gt;&gt;&nbsp;db&nbsp;=&nbsp;cnelib.database.sqlite_db('/home/user/cne.db')<br>
+&gt;&gt;&gt;&nbsp;<a href="#cedula">cedula</a>&nbsp;=&nbsp;cnelib.blend.<a href="#cedula">cedula</a>(web,&nbsp;db)<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+<dl><dt><a name="cedula-search"><strong>search</strong></a>(self, nac, ced)</dt><dd><tt>Busca&nbsp;y&nbsp;retorna&nbsp;tupla&nbsp;con&nbsp;los&nbsp;resultados&nbsp;de&nbsp;la&nbsp;busqueda<br>
+*&nbsp;nac&nbsp;--&nbsp;Nacionalidad&nbsp;(V|E)<br>
+*&nbsp;ced&nbsp;--&nbsp;Numero&nbsp;de&nbsp;<a href="#cedula">cedula</a><br>
+&nbsp;<br>
+Ejemplo&nbsp;de&nbsp;uso:<br>
+&gt;&gt;&gt;&nbsp;<a href="#cedula">cedula</a>.<a href="#cedula-search">search</a>('V',&nbsp;12345678)<br>
+((12345678,&nbsp;'V',&nbsp;'Peppa&nbsp;Pig&nbsp;La&nbsp;Cerdita',&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None,&nbsp;None),)<br>
+&gt;&gt;&gt;</tt></dd></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>
