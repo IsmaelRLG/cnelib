@@ -79,6 +79,8 @@ def main():
         print('Copyright 2016, Ismael R. Lugo G.')
         return
 
+    if args.fork_set:
+        logging.basicConfig(level=30, format='%(levelname)s: %(message)s')
     if args.verbose:
         logging.basicConfig(level=10, format='%(levelname)s: %(message)s')
     else:
@@ -135,12 +137,12 @@ def main():
 
             if args.fork_set:
                 if num_cedula and nacionalidad:
-                    sps = float(args.fork_set[1])
-                    nac = nacionalidad
-                    init = num_cedula
-                    now = num_cedula
-                    end = num_cedula + int(args.fork_set[0])
-                    fork = cnelib.fork.fork(cedula, sps, nac, init, end, now)
+                    s = float(args.fork_set[1])
+                    N = nacionalidad
+                    i = num_cedula
+                    n = num_cedula
+                    e = num_cedula + int(args.fork_set[0])
+                    fork = cnelib.fork.fork(cedula, s, N, i, e, n, pbar=True)
             elif args.fork:
                 fork = cnelib.fork.fork(cedula, conf=conf)
             if not args.daemon and not args.fork_set:
@@ -242,4 +244,7 @@ def main():
         return
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except NameError as error:
+        logging.error('Error inesperado: %s: %s', error.__class__.__name__, str(error))

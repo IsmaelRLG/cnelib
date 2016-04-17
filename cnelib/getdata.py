@@ -148,7 +148,7 @@ class cedula:
             elif nombre is False:
                 result['error'] = 'Internet desconectado'
             else:
-                result['error'] = 'No registrado en la base de datos'
+                result['error'] = 'No registrado en la db'
 
         result['nacionalidad'] = nac
         result['cedula'] = ced
