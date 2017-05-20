@@ -8,7 +8,7 @@ import argparse
 import cnelib
 import logging
 import time
-import prettytable
+
 from os import system
 from cnelib import config
 from progressbar import ProgressBar

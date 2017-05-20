@@ -15,7 +15,7 @@ Instalando dependencias:
     - pip install -r requirements.txt
 
 Una vez instaladas las dependencias procedemos con la instalación de cnelib:
-    - **git clone https://github.com/IsmaelRLG/cnelib.
+    - **git clone https://github.com/IsmaelRLG/cnelib.**
     - **# python setup.py install**
     - Ahora a puede ser usado como libreria o en linea de comandos 
     - línea de comandos: **$ cedula --help**
