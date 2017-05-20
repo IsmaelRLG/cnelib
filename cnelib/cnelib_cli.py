@@ -170,7 +170,7 @@ def main():
     elif config.check_conf(cmd.conf) and not cmd.genconf:
         config.CFG_PATH = cmd.conf  # feedback
         config.read_conf(cmd.conf)
-        new_values = config.__dict__
+    new_values = config.__dict__
 
     def not_null(cmd_value, name, null=False):
         if cmd_value != default['null' if null else name]:
