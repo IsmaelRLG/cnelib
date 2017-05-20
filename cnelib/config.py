@@ -1,126 +1,182 @@
 # -*- coding: utf-8 -*-
-"""
-cnelib - Archivo de configuracion
-Copyright 2016, Ismael R. Lugo G.
-
-Actualmente solo se soportan dos tipos de bases de datos, MySQL y SQLite3, acá
-se dara una breve descripcion de su funcionamiento y su uso, en una forma mas
-detallada.
-"""
-
+# cnelib: módulo de configuraciones
+# Copyright 2016-2017, Ismael R. Lugo G.
+#-------------------------------------------+
+# Este módulo se encarga de crear, cargar   |
+# y guardar la configuración. El formato    |
+# utilizado es el definido en el RFC 822.   |
+#-------------------------------------------+
+from __future__ import unicode_literals
+from six.moves import configparser
 import os
-import sys
 import logging
+logging = logging.getLogger('cnelib')
 
-if sys.version_info >= (2, 7):
-    import configparser as ConfigParser
-else:
-    import ConfigParser  # lint:ok
+################################################################################
+#                  Segmento: Variables de configuraciones                      #
+################################################################################
+
+# Variables de entorno
+#--------------------------------------------
+HOME = os.environ['HOME']  # Carpeta personal
+USER = os.environ['USER']  # Nombre del usuario
+CONF = os.path.join(HOME, '.config')
+
+# Archivo de configuración
+#--------------------------------------------
+CFG_EXT = '.conf'
+CFG_NAME = 'cedulas-ve'
+CFG_PATH = os.path.join(CONF, CFG_NAME + CFG_EXT)
+
+# Bases de datos
+#--------------------------------------------
+DB_TYPE = 'sqlite'  # Tipos soportados: SQLite, MySQL, PostgreSQL
+DB_NAME = 'cedulas'
+DB_FILE = 'cedulas-ve.db'
+DB_PATH = os.path.join(CONF, DB_FILE)
+DB_HOST = None
+DB_PORT = None
+DB_USER = None
+DB_PASS = None
+DB_TABLE = 'cedulas'
+
+# Evasión de restricciones (Proxys)
+#--------------------------------------------
+PR_HOST = None
+PR_PORT = None
+PR_USER = None
+PR_PASS = None
+
+# Opciones de escaneo
+#--------------------------------------------
+SPS = 0.3  # Una solicitud cada X segundos
+THR = 1  # Número de hilos a ejecutar
+C_RANG = None  # Rango de cedulas a escanear
+NAC = 'V'
+#       secs * mins * hours --> day * day mon -->
+EXPIRE = 60 * 60 * 24 * 30 * 6
 
 
-class config:
+################################################################################
+#                  Segmento: Manejador de configuraciones                      #
+################################################################################
+cfg_parser = configparser.ConfigParser()
+cfg_types = {int: 'getint', float: 'getfloat', bool: 'getbolean', str: 'get'}
+failed = False
+sucess = True
+null = 'ninguno'
+debug = False
 
-    def __init__(self, abspath, SystemExit=False):
-        """
-        Clase para facilitar las configuraciones.
-        * abspath -- Indica la posicion absoluta del archivo de configuracion
 
-        * SystemExit -- Indica que al no encontrar el archivo de configuracion
-        se arrojara una excepcion de tipo "SystemExit", y por consecuencia,
-        termina con la salida del interprete.
-        """
+def check_conf(abspath):
 
-        self.ABSOLUTE_PATH = abspath
+    return os.path.exists(abspath) and os.path.isfile(abspath)
 
-        self.conf = ConfigParser.ConfigParser()
 
-        if not os.path.exists(self.ABSOLUTE_PATH):
-            if SystemExit:
-                logging.error('Archivo de configuración faltante.')
-                exit()
+def read_conf(abspath):
+    if not check_conf(abspath):
+        return logging.error('Archivo de configuración "%s" inválido.', abspath)
+
+    try:
+        cfg = file(abspath, 'r')
+    except IOError as e:
+        if e.errno == 13:
+            logging.error('Permiso denegado: %s', abspath)
+        return failed
+
+    try:
+        cfg_parser.readfp(cfg)
+    except:
+        logging.error('Archivo de configuración "%s" inválido.', abspath)
+        return failed
+
+    def get(s, opt, default=None, type=str):
+        if not cfg_parser.has_section(s) or not cfg_parser.has_option(s, opt):
+            return default
+        try:  value = getattr(cfg_parser, cfg_types[type])(s, opt)
+        except: return default
+
+        if type == str and value == '':
+            return default
         else:
-            self.conf.read(self.ABSOLUTE_PATH)
+            return value
 
-    def __call__(self, *args):
-        """
-        Metodo el cual permite llamar al objeto una vez instanciado, podiendo
-        solicitar opciones de la configuracion, unicamente contenidas en la
-        seccion "CNE".
-        * args -- Se da la posibilidad de pasar "ilimitadamente" opciones,
-        siempre y cuando esten contenidas en la configuracion.
+    global CFG_PATH
+    global DB_TYPE, DB_NAME, DB_FILE, DB_PATH, DB_HOST, DB_PORT, DB_USER
+    global DB_PASS, DB_TABLE
+    global PR_HOST, PR_PORT, PR_USER, PR_PASS
+    global SPS, THR, C_RANG, NAC
 
-        >>> config = cnelib.config.config('cnelib.conf')
-        >>> config('DB_HOST', 'DB_USER')
-        ('localhost', 'root')
-        """
-        stack = []
-        for option in args:
-            try:
-                stack.append(self.conf.get('CNE', option))
-            except ConfigParser.NoOptionError:
-                logging.error('Opción faltante: "%s".' % option)
+    # section: conf
+    CFG_PATH = get('conf', 'CFG_PATH', CFG_PATH)
 
-        return tuple(stack) if len(stack) > 1 else stack[0]
+    # section: database
+    DB_TYPE = get('database', 'DB_TYPE', DB_TYPE)
+    DB_NAME = get('database', 'DB_NAME', DB_NAME)
+    DB_FILE = get('database', 'DB_FILE', DB_FILE)
+    DB_PATH = get('database', 'DB_PATH', DB_PATH)
+    DB_HOST = get('database', 'DB_HOST', DB_HOST)
+    DB_PORT = get('database', 'DB_PORT', DB_PORT, type=int)
+    DB_USER = get('database', 'DB_USER', DB_USER)
+    DB_PASS = get('database', 'DB_PASS', DB_PASS)
+    DB_TABLE = get('database', 'DB_TABLE', DB_TABLE)
 
-    def make(self):
-        """
-        Crea una plantilla de configuracion en el path previamente dado
-        Acerca de los valores de las opciones.
+    # section: proxy
+    PR_HOST = get('proxy', 'PR_HOST', PR_HOST)
+    PR_PORT = get('proxy', 'PR_PORT', PR_PORT, type=int)
+    PR_USER = get('proxy', 'PR_USER', PR_USER)
+    PR_PASS = get('proxy', 'PR_PASS', PR_PASS)
 
-        En caso de usar MySQL
-        - DB_HOST -- nombre del host
-        - DB_USER -- nombre del usuario
-        - DB_PASS -- Contraseña
-        - DB_PASS -- Nombre de la base de datos
+    # section: scan options
+    SPS = get('scan-options', 'SPS', SPS, type=float)
+    THR = get('scan-options', 'THR', THR, type=int)
+    NAC = get('scan-options', 'SPS', NAC)
+    C_RANG = get('scan-options', 'C_RANG', C_RANG)
 
-        En caso de usar SQLite3
-        - ABSPATH -- Nombre absoluto de la posicion del archivo
 
-        En caso de querer usar Proxy
-        - tor -- Indica si se usara o no proxy
-        - addr -- Direccion de control (ControlAddr)
-        - port -- Numero de puerto (ControlPort)
-        - pass -- Contraseña de control
+def save_conf(abspath=CFG_PATH):
+    try:
+        cfg = file(abspath, 'w')
+    except IOError as e:
+        if e.errno == 13:
+            logging.error('Permiso denegado: %s', abspath)
+        return failed
 
-        En caso de estar en proceso de forkeo
-        - init -- Numero de cedula inicial
-        - end -- Numero de cedula final
-        - now -- Numero de cedula actual
-        - sps -- Solicitudes por segundo
+    def set(s, opt):
+        if opt is None:
+            return
+        if not cfg_parser.has_section(s):
+            cfg_parser.add_section(s)
+        if isinstance(opt, bool):
+            opt = 'yes' if opt else 'no'
+        else:
+            opt = str(opt)
+        cfg_parser.set(s, opt)
 
-        Otros valores:
-        - fork -- Indica si hay un proceso de fork andando
-        - pid -- Inidica el pid del ultimo proceso andando
-        - nac -- Inidica la nacionalidad a buscar por default
-        """
+    # section: conf
+    set('conf', 'CFG_PATH', CFG_PATH)
 
-        try:
-            self.conf.add_section('CNE')
-        except ConfigParser.DuplicateSectionError:
-            pass
+    # section: database
+    set('database', DB_TYPE)
+    set('database', DB_NAME)
+    set('database', DB_FILE)
+    set('database', DB_PATH)
+    set('database', DB_HOST)
+    set('database', DB_PORT)
+    set('database', DB_USER)
+    set('database', DB_PASS)
+    set('database', DB_TABLE)
 
-        self.conf.set('CNE', 'DB_HOST', 'localhost')
-        self.conf.set('CNE', 'DB_USER', 'root')
-        self.conf.set('CNE', 'DB_PASS', 'password')
-        self.conf.set('CNE', 'DB_NAME', 'CNE')
-        self.conf.set('CNE', 'ABSPATH', '/home/{user}/cne.db')
-        self.conf.set('CNE', 'fork', 'no')
-        self.conf.set('CNE', 'pid', '0')
-        self.conf.set('CNE', 'nac', 'V')
-        self.conf.set('CNE', 'init', '0')
-        self.conf.set('CNE', 'end', '0')
-        self.conf.set('CNE', 'now', '0')
-        self.conf.set('CNE', 'sps', '1.2')
-        self.conf.set('CNE', 'tor', 'no')
-        self.conf.set('CNE', 'addr', 'localhost')
-        self.conf.set('CNE', 'port', '9051')
-        self.conf.set('CNE', 'pass', 'password')
-        self.save()
-        logging.info('Configuración inicial creada.')
+    # section: proxy
+    set('proxy', PR_HOST)
+    set('proxy', PR_PORT)
+    set('proxy', PR_USER)
+    set('proxy', PR_PASS)
 
-    def save(self):
-        """
-        Guarda el estado actual de la configuracion en un archivo.
-        """
-        with file(self.ABSOLUTE_PATH, 'w') as config:
-            self.conf.write(config)
+    # section: scan options
+    set('scan-options', SPS)
+    set('scan-options', THR)
+    set('scan-options', NAC)
+    set('scan-options', C_RANG)
+
+    cfg_parser.write(cfg)

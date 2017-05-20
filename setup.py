@@ -1,52 +1,51 @@
 #!/usr/bin/env python
-
-# Setup script for the `cnelib' package.
+# -*- coding: utf-8 -*-
 #
-# Author: Ismael Lugo <ismaelrlgv@gmail.com>
-# Last Change: 06-04-2016
+# Script de instalación para cnelib
+#------------------------------------------
+#
+# Autor: Ismael Lugo <ismaelrlgv@gmail.com>
+# Ultimo cambio: 2017-05-20
 # URL: https://github.com/IsmaelRLG/cnelib
 
-import sys
-import codecs
 import os
-
-# De-facto standard solution for Python packaging.
-from setuptools import find_packages, setup
-
-# Find the directory where the source distribution was unpacked.
-source_directory = os.path.dirname(os.path.abspath(__file__))
-
-# Add the directory with the source distribution to the search path.
-sys.path.append(source_directory)
-
-# Fill in the long description (for the benefit of PyPI)
-# with the contents of README.rst (rendered by GitHub).
-readme_file = os.path.join(source_directory, 'README.rst')
-with codecs.open(readme_file, 'r', 'utf-8') as handle:
-    readme_text = handle.read()
-
 import cnelib
+
+from setuptools import find_packages, setup
+current_dir = os.path.dirname(os.path.abspath(__file__))
+readme_file = os.path.join(current_dir, 'README.rst')
+with file(readme_file, 'r') as fp:
+    readme_text = fp.read()
+requires = file(os.path.join(current_dir, 'requirements.txt'), 'r')
+requires = requires.read().splitlines()
 
 setup(
     name='cnelib',
     version=cnelib.__version__,
-    description='Libreria para consultas del Consejo Nacional Electoral (CNE)',
+    description='Libreria para consultas sobre el Consejo Nacional Electoral (CNE)',
     long_description=readme_text,
     author='Ismael Lugo',
     author_email='ismaelrlgv@gmail.com',
+    license='MIT',
     url='https://github.com/IsmaelRLG/cnelib',
-    #install_requires=['TorCtl'],
-    scripts=['bin/cne'],
+    install_requires=requires,
     packages=find_packages(),
     classifiers=[
-    'Intended Audience :: Developers',
-    'Programming Language :: Python :: 2.7',
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
-    'License :: OSI Approved :: MIT License',
-    'Natural Language :: Spanish',
-    'Topic :: Software Development',
-    'Topic :: Software Development :: Libraries :: Python Modules',
-    'Operating System :: OS Independent'
-    ]
+        'Development Status :: 3 - Alpha',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'Intended Audience :: End Users/Desktop',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: Spanish',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Topic :: Software Development',
+        'Topic :: Software Development :: Libraries :: Python Modules'],
+
+    entry_points=dict(console_scripts=[
+        'cedula = cnelib.cnelib_cli:main',
+        #'cne2cedula = cnelib.migrate:main',
+        ])
 )

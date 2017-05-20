@@ -1,23 +1,6 @@
 # -*- coding: utf-8 -*-
-"""cnelib
+# cnelib: Libreria para la obtencion de datos del CNE
+# Copyright 2016-2017, Ismael R. Lugo G.
 
-¿Que es cnelib? Es una libreria que permite hacer consultas sobre cedulas de
-identidad inscritas o no, en el registro de el Consejo Nacional Electoral (CNE),
-además de tener la capacidad de salvaguardar los datos obtenidos, en una base de
-datos local, usando MySQL y SQLite como motores de base de datos, dando mayores
-posibilidades, como busqueda por nombre, estado, posibilidad de trabajo offline,
-etc.
-"""
-
+__version__ = '2.0'
 __author__ = 'Ismael Lugo'
-__version__ = '1.0.4'
-
-#lint:disable
-from . import getdata
-from . import blend
-from . import config
-from . import database
-from . import equal
-from . import fork
-from . import web
-#lint:enable
