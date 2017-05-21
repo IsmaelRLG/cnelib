@@ -1,11 +1,10 @@
 language: python
 python:
   - "2.7"
-  - "3.4"
 
 install: 
   - pip install -r requirements.txt
   - pip install .
 script:
-  - cedula -n V -r 10000000-10000100 -n 5 --db-file cedula.db
+  - cedula -n V -r 10000000-10000100 -s 5 --db-file cedula.db
   - cedula -n V -r 10000000-10000010 --show --db-file cedula.db
